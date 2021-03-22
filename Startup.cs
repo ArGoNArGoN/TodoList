@@ -21,12 +21,17 @@ namespace TodoList
 {
     public class Startup
     {
+        public static ToDoGoogleService Service { get; set; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public ToDoGoogleService Initialize()
+        static Startup() 
+            => Service = Initialize();
+
+        private static ToDoGoogleService Initialize()
         {
             UserCredential credential;
 

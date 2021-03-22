@@ -19,7 +19,7 @@ namespace TodoList.Data
 		public String Title { get; set; }
 		private TasksService Service { get; }
 		private TasksResource Tasks { get; }
-		public List<TodoItem> TodoItems { get; private set; }
+		public List<TodoItem> TodoItems { get; private set; } = new List<TodoItem>();
 
 		public ToDoGoogleService(TasksService service)
 		{
@@ -67,6 +67,16 @@ namespace TodoList.Data
 		}
 
 		private List<TodoItem> GetData()
-			=> Tasks.List(id).Execute().Items.Select(x => new TodoItem() { Title = x.Title, ID = x.Id }).ToList();
+        {
+			TodoItems.Clear();
+			Tasks.List(id)
+				.Execute()
+				.Items
+				.Select(x => new TodoItem() { Title = x.Title, ID = x.Id })
+				.ToList()
+				.ForEach(x => TodoItems.Add(x));
+
+			return TodoItems;
+		}
 	}
 }

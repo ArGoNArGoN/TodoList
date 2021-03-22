@@ -1,9 +1,9 @@
 ﻿@page "/todo"
 
-<h3>Todo (@todos.Count(todo => !todo.IsDone))</h3>
+<h3>Todo (@Todos.Count(todo => !todo.IsDone))</h3>
 
 <ul>
-    @foreach (var todo in todos)
+    @foreach (var todo in Todos)
     {
         <li>
             <input type="checkbox" @bind="todo.IsDone" />
@@ -14,63 +14,56 @@
 
 <input placeholder="Something todo" @bind="newTodo" />
 <button @onclick="AddTodo">Add todo</button>
+<br />
 <input placeholder="Введите номер задачи" @bind="IdEd" />
 <input placeholder="Введите задачу" @bind="editToDo" />
 <button @onclick="EditToDo">Edit</button>
-<input placeholder="Введите номер задачи" @bind="Id" />
+<br />
+<input placeholder="Введите номер задачи" @bind="IdDel" />
+<button @onclick="DelToDo">Edit</button>
 
 @code {
-    private IList<TodoItem> todos = Program.TodoItems;
-    private TasksResource Tasks { get; set; } = Program.Tasks;
-    private String IdTasks { get; set; } = Program.IdTasks;
-    private String newTodo;
-    private String editToDo;
-    private String IdEd;
-    private String Id;
 
-    public void Initialize()
+    private ToDoGoogleService Service { get; set; } = Startup.Service;
+    private IList<TodoItem> Todos { get; set; } = Startup.Service.TodoItems;
+    public String newTodo { get; set; } = String.Empty;
+    public String IdDel { get; set; } = String.Empty;
+    public String IdEd { get; set; } = String.Empty;
+    public String editToDo { get; set; } = String.Empty;
+
+
+    private void EditToDo()
     {
-
+        if (!string.IsNullOrWhiteSpace(newTodo))
+        {
+            if (Int32.TryParse(IdEd, out Int32 id) && id > -1 && id > Service.TodoItems.Count)
+            {
+                IdEd = "Ошибка id :(";
+                return;
+            }
+            Service.TodoItems[id].Title = editToDo;
+            Service.EditTask(Service.TodoItems[id]);
+        }
     }
 
-    private void EditToDo(MouseEventArgs e)
+    private void DelToDo()
     {
-        if (!Int32.TryParse(IdEd, out Int32 id))
+        if (!string.IsNullOrWhiteSpace(newTodo))
         {
-            IdEd = "Ошибка!";
-            return;
+            if (Int32.TryParse(IdDel, out Int32 id) && id > -1 && id > Service.TodoItems.Count)
+            {
+                IdDel = "Ошибка id :(";
+                return;
+            }
+            Service.DeleteTask(Service.TodoItems[id]);
         }
-
-        id -= 1;
-        if (id < 0 || id >= todos.Count)
-        {
-            IdEd = "Id не найден";
-            return;
-        }
-
-        var task = todos.ToList()[id];
-        task.Title = editToDo;
-        var a = Tasks.Update(new Google.Apis.Tasks.v1.Data.Task() { Title = task.Title, Id = task.ID }, IdTasks, task.ID).ExecuteAsync();
     }
 
     private void AddTodo()
     {
         if (!string.IsNullOrWhiteSpace(newTodo))
         {
-            todos.Add(new TodoItem { Title = newTodo });
-
-            var t = Tasks.Insert(new Google.Apis.Tasks.v1.Data.Task() { Title = newTodo },
-                IdTasks);
-
-            try
-            {
-                t.Execute();
-                newTodo = String.Empty;
-            }
-            catch (Exception e)
-            {
-                newTodo = e.Message;
-            }
+            Service.AddTask(new TodoItem() { Title = newTodo });
         }
     }
 }
