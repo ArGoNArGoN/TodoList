@@ -40,7 +40,7 @@ namespace TodoList.Data
 		}
 		public void AddTask(TodoItem task)
 		{
-			var ntask = new Google.Apis.Tasks.v1.Data.Task() { Title = task.Title };
+			var ntask = new Task() { Title = task.Title };
 			this.AddTask(ntask);
 		}
 

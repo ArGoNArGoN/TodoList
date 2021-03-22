@@ -20,7 +20,7 @@
 <button @onclick="EditToDo">Edit</button>
 <br />
 <input placeholder="Введите номер задачи" @bind="IdDel" />
-<button @onclick="DelToDo">Edit</button>
+<button @onclick="DelToDo">Del</button>
 
 @code {
 
@@ -34,7 +34,7 @@
 
     private void EditToDo()
     {
-        if (!string.IsNullOrWhiteSpace(newTodo))
+        if (!string.IsNullOrWhiteSpace(editToDo))
         {
             if (Int32.TryParse(IdEd, out Int32 id) && id > -1 && id > Service.TodoItems.Count)
             {
@@ -48,15 +48,12 @@
 
     private void DelToDo()
     {
-        if (!string.IsNullOrWhiteSpace(newTodo))
+        if (Int32.TryParse(IdDel, out Int32 id) && id > -1 && id > Service.TodoItems.Count)
         {
-            if (Int32.TryParse(IdDel, out Int32 id) && id > -1 && id > Service.TodoItems.Count)
-            {
-                IdDel = "Ошибка id :(";
-                return;
-            }
-            Service.DeleteTask(Service.TodoItems[id]);
+            IdDel = "Ошибка id :(";
+            return;
         }
+        Service.DeleteTask(Service.TodoItems[id]);
     }
 
     private void AddTodo()

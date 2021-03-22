@@ -21,6 +21,8 @@ namespace TodoList
 {
     public class Startup
     {
+        /// 
+
         public static ToDoGoogleService Service { get; set; }
 
         public Startup(IConfiguration configuration)
@@ -60,8 +62,9 @@ namespace TodoList
             });
 
             return new ToDoGoogleService(service);
-
         }
+
+        ///
 
         public IConfiguration Configuration { get; }
 
