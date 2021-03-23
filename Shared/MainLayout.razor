@@ -1,4 +1,5 @@
 @inherits LayoutComponentBase
+@inject IBootstrapCss BootstrapCSS
 
 <div class="page">
     <div class="sidebar">
@@ -15,3 +16,22 @@
         </div>
     </div>
 </div>
+@code{
+    private Boolean isServerSide = false;
+    protected override async System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        try
+        {
+            await BootstrapCSS.SetBootstrapCss("4.3.1");
+        }
+        catch (Exception)
+        {
+            isServerSide = true;
+        }
+    }
+    protected override async System.Threading.Tasks.Task OnAfterRenderAsync(Boolean firstRun)
+    {
+        if (isServerSide && firstRun)
+            await BootstrapCSS.SetBootstrapCss();
+    }
+}

@@ -1,66 +1,28 @@
 ﻿@page "/todo"
+@inherits ToDoModel
 
-<h3>Todo (@Todos.Count(todo => !todo.IsDone))</h3>
-
-<ul>
-    @foreach (var todo in Todos)
-    {
-        <li>
-            <input type="checkbox" @bind="todo.IsDone" />
-            <input @bind="todo.Title" />
-        </li>
-    }
-</ul>
-
-<input placeholder="Something todo" @bind="newTodo" />
-<button @onclick="AddTodo">Add todo</button>
-<br />
-<input placeholder="Введите номер задачи" @bind="IdEd" />
-<input placeholder="Введите задачу" @bind="editToDo" />
-<button @onclick="EditToDo">Edit</button>
-<br />
-<input placeholder="Введите номер задачи" @bind="IdDel" />
-<button @onclick="DelToDo">Del</button>
-
-@code {
-
-    private ToDoGoogleService Service { get; set; } = Startup.Service;
-    private IList<TodoItem> Todos { get; set; } = Startup.Service.TodoItems;
-    public String newTodo { get; set; } = String.Empty;
-    public String IdDel { get; set; } = String.Empty;
-    public String IdEd { get; set; } = String.Empty;
-    public String editToDo { get; set; } = String.Empty;
-
-
-    private void EditToDo()
-    {
-        if (!string.IsNullOrWhiteSpace(editToDo))
+<html>
+<head>
+    <link rel=stylesheet type="text/css" href="C:\Users\Qwerty\TodoList\wwwroot\css\MyCSS\MyStyle.css">
+</head>
+<body>
+    <h3>Todo (@Todos.Count(todo => !todo.IsDone))</h3>
+    <BSListGroup ListGroupType="ListGroupType.Link">
+        @foreach (var todo in Todos)
         {
-            if (Int32.TryParse(IdEd, out Int32 id) && id > -1 && id > Service.TodoItems.Count)
-            {
-                IdEd = "Ошибка id :(";
-                return;
-            }
-            Service.TodoItems[id].Title = editToDo;
-            Service.EditTask(Service.TodoItems[id]);
+            <BSListGroupItem ListGroupType="ListGroupType.Link" Href="#">
+                <input type="checkbox" @bind="todo.IsDone" />
+                <BSBasicInput style="max-width: 300px" @bind-Value="todo.Title"></BSBasicInput>
+                <BSButton Color="Color.Warning" @onclick="(() => EditToDo(todo))">Edit</BSButton>
+                <BSButton style="margin: 2px;" Color="Color.Danger" @onclick="(() => DelToDo(todo))">Del</BSButton>
+            </BSListGroupItem>
         }
-    }
+    </BSListGroup>
 
-    private void DelToDo()
-    {
-        if (Int32.TryParse(IdDel, out Int32 id) && id > -1 && id > Service.TodoItems.Count)
-        {
-            IdDel = "Ошибка id :(";
-            return;
-        }
-        Service.DeleteTask(Service.TodoItems[id]);
-    }
-
-    private void AddTodo()
-    {
-        if (!string.IsNullOrWhiteSpace(newTodo))
-        {
-            Service.AddTask(new TodoItem() { Title = newTodo });
-        }
-    }
+    <BSBasicInput placeholder="Something todo" style="max-width: 300px; margin: 40px 10px 0px 0px;" @bind-Value="newTodo"></BSBasicInput>
+    <BSButton style="margin: 2px;" Color="Color.Warning" @onclick="AddTodo">Add todo</BSButton>
+</body>
+</html>
+@code{
+    Int32 a = 0;
 }

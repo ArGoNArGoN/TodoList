@@ -19,7 +19,7 @@ namespace TodoList.Data
 		public String Title { get; set; }
 		private TasksService Service { get; }
 		private TasksResource Tasks { get; }
-		public List<TodoItem> TodoItems { get; private set; } = new List<TodoItem>();
+		public List<TodoItem> GetTodoItems { get; private set; } = new List<TodoItem>();
 
 		public ToDoGoogleService(TasksService service)
 		{
@@ -30,13 +30,13 @@ namespace TodoList.Data
 			id = Ltask.Id;
 			Title = Ltask.Title;
 			Tasks = Service.Tasks;
-			TodoItems = GetData();
+			GetTodoItems = GetData();
 		}
 
 		public void AddTask(Task task)
 		{
 			Tasks.Insert(task, id).Execute();
-			TodoItems = GetData();
+			GetTodoItems = GetData();
 		}
 		public void AddTask(TodoItem task)
 		{
@@ -47,7 +47,7 @@ namespace TodoList.Data
 		public void EditTask(Task task)
 		{
 			Tasks.Update(task, id, task.Id).Execute();
-			TodoItems = GetData();
+			GetTodoItems = GetData();
 		}
 		public void EditTask(TodoItem task)
 		{
@@ -58,7 +58,7 @@ namespace TodoList.Data
 		public void DeleteTask(Task task)
 		{
 			Tasks.Delete(id, task.Id).Execute();
-			TodoItems = GetData();
+			GetTodoItems = GetData();
 		}
 		public void DeleteTask(TodoItem task)
 		{
@@ -68,15 +68,15 @@ namespace TodoList.Data
 
 		private List<TodoItem> GetData()
         {
-			TodoItems.Clear();
+			GetTodoItems.Clear();
 			Tasks.List(id)
 				.Execute()
 				.Items
 				.Select(x => new TodoItem() { Title = x.Title, ID = x.Id })
 				.ToList()
-				.ForEach(x => TodoItems.Add(x));
+				.ForEach(x => GetTodoItems.Add(x));
 
-			return TodoItems;
+			return GetTodoItems;
 		}
 	}
 }

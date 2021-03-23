@@ -5,7 +5,9 @@ namespace TodoList
 {
 	public class Program
 	{
-		public static void Main(string[] args)
+        public int MyProperty { get; private set; }
+
+        public static void Main(string[] args)
 		{
 			CreateHostBuilder(args).Build().Run();
 		}

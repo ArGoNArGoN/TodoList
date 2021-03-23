@@ -16,55 +16,16 @@ using Microsoft.Extensions.Configuration;
 using TodoList.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using BlazorStrap;
 
 namespace TodoList
 {
     public class Startup
     {
-        /// 
-
-        public static ToDoGoogleService Service { get; set; }
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        static Startup() 
-            => Service = Initialize();
-
-        private static ToDoGoogleService Initialize()
-        {
-            UserCredential credential;
-
-            string[] Scopes = { TasksService.Scope.Tasks };
-            string ApplicationName = "Google Tasks API .NET Quickstart";
-
-            using (var stream =
-                new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
-            {
-                // The file token.json stores the user's access and refresh tokens, and is created
-                // automatically when the authorization flow completes for the first time.
-                string credPath = "token.json";
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
-                    Scopes,
-                    "user",
-                    CancellationToken.None).Result;
-                Console.WriteLine("Credential file saved to: " + credPath);
-            }
-
-            // Create Google Tasks API service.
-            var service = new TasksService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = ApplicationName,
-            });
-
-            return new ToDoGoogleService(service);
-        }
-
-        ///
 
         public IConfiguration Configuration { get; }
 
@@ -72,6 +33,7 @@ namespace TodoList
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddBootstrapCSS();
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();

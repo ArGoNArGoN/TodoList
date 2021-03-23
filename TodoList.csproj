@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BlazorStrap" Version="1.5.1" />
     <PackageReference Include="Google.Apis.Tasks.v1" Version="1.51.0.2231" />
   </ItemGroup>
 
