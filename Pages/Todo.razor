@@ -13,16 +13,13 @@
             <BSListGroupItem ListGroupType="ListGroupType.Link" Href="#">
                 <input type="checkbox" @bind="todo.IsDone" />
                 <BSBasicInput style="max-width: 300px" @bind-Value="todo.Title"></BSBasicInput>
-                <BSButton Color="Color.Warning" @onclick="(() => EditToDo(todo))">Edit</BSButton>
-                <BSButton style="margin: 2px;" Color="Color.Danger" @onclick="(() => DelToDo(todo))">Del</BSButton>
+                <BSButton Color="Color.Warning" @onclick="(() => EditToDoAsync(todo))">Edit</BSButton>
+                <BSButton style="margin: 2px;" Color="Color.Danger" @onclick="(() => DelToDoAsync(todo))">Del</BSButton>
             </BSListGroupItem>
         }
     </BSListGroup>
 
-    <BSBasicInput placeholder="Something todo" style="max-width: 300px; margin: 40px 10px 0px 0px;" @bind-Value="newTodo"></BSBasicInput>
-    <BSButton style="margin: 2px;" Color="Color.Warning" @onclick="AddTodo">Add todo</BSButton>
+    <BSBasicInput placeholder="Something todo" style="max-width: 300px; margin: 40px 10px 0px 0px;" @bind-Value="NewTodo"></BSBasicInput>
+    <BSButton style="margin: 2px;" Color="Color.Warning" @onclick="AddTodoAsync">Add todo</BSButton>
 </body>
 </html>
-@code{
-    Int32 a = 0;
-}

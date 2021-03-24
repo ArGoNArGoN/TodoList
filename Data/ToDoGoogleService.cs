@@ -47,7 +47,10 @@ namespace TodoList.Data
 		public void EditTask(Task task)
 		{
 			Tasks.Update(task, id, task.Id).Execute();
-			GetTodoItems = GetData();
+			var item = GetTodoItems.FirstOrDefault(x => x.ID == task.Id);
+
+			if (task.Title != item.Title)
+				item.Title = task.Title;
 		}
 		public void EditTask(TodoItem task)
 		{
@@ -58,7 +61,10 @@ namespace TodoList.Data
 		public void DeleteTask(Task task)
 		{
 			Tasks.Delete(id, task.Id).Execute();
-			GetTodoItems = GetData();
+
+			var item = GetTodoItems.FirstOrDefault(x => task.Id == x.ID);
+			if (item is null) return;
+			else GetTodoItems.Remove(item);
 		}
 		public void DeleteTask(TodoItem task)
 		{

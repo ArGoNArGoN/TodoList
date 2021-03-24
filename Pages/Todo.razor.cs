@@ -56,23 +56,27 @@ namespace TodoList.Pages
 
 		public ToDoGoogleService Service { get; private set; }
 		public IList<TodoItem> Todos { get; set; }
-		public String newTodo { get; set; } = String.Empty;
+		public String NewTodo { get; set; } = String.Empty;
 		public String IdDel { get; set; } = String.Empty;
 		public String IdEd { get; set; } = String.Empty;
-		public String editToDo { get; set; } = String.Empty;
+		public String EditTodo { get; set; } = String.Empty;
 
-		public void EditToDo(TodoItem item)
-			=> Service.EditTask(item);
+		public async System.Threading.Tasks.Task EditToDoAsync(TodoItem item)
+			=> await System.Threading.Tasks.Task.Run(() => Service.EditTask(item));
 
-		public void DelToDo(TodoItem item)
-			=> Service.DeleteTask(item);
-
-		public void AddTodo()
+		public async System.Threading.Tasks.Task DelToDoAsync(TodoItem item)
 		{
-			if (!string.IsNullOrWhiteSpace(newTodo))
+			Todos.Remove(item);
+			await System.Threading.Tasks.Task.Run(() => Service.DeleteTask(item));
+		}
+
+		public async System.Threading.Tasks.Task AddTodoAsync()
+		{
+			if (!string.IsNullOrWhiteSpace(NewTodo))
 			{
-				Service.AddTask(new TodoItem() { Title = newTodo });
-				newTodo = String.Empty;
+				var s = NewTodo.Select(x => x.ToString()).Aggregate((x, y) => x + y);
+				NewTodo = String.Empty;
+				await System.Threading.Tasks.Task.Run(() => Service.AddTask(new TodoItem() { Title = s }));
 			}
 		}
 	}
